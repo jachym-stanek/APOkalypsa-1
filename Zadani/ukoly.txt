@@ -1,0 +1,24 @@
+Vytvořit main menu
+Změny jmen
+	grafika
+	logika
+Vytvořit hru
+	ovládání pálek
+	fyzika míčku
+	detekce kolizí
+	detekce gólů
+vstup do pause
+pause menu
+	grafika
+	logika
+akce při gólech
+	blikat ledky
+	výpis na stdout
+	update ledek
+	udate skoreboardu
+	detekce konce hry
+akce při konci hry
+	blikání LED
+	display
+	return to main menu
+
