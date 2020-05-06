@@ -4,7 +4,7 @@ Seminary work for the APO subject in summer semester of 2020. The PONG game on M
 ## Team
 Hynek "APOmaster" Zamazal
 
-Jachym ""Hekr Stanek
+Jachym "Hekr" Stanek
 
 ## Stash dotazů pro Píču
 	Dokumentace v angličtině
