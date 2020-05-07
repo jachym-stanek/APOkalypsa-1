@@ -1,17 +1,18 @@
-Vytvořit main menu
-Změny jmen
+Vytvořit main menu Jachym
+Změny jmen Jachym
 	grafika
 	logika
-Vytvořit hru
+Vytvořit hru	Hynek
 	ovládání pálek
 	fyzika míčku
 	detekce kolizí
 	detekce gólů
+	vytvorit grafiku
 vstup do pause
-pause menu
+pause menu 
 	grafika
 	logika
-akce při gólech
+akce při gólech	Jachym
 	blikat ledky
 	výpis na stdout
 	update ledek
