@@ -6,11 +6,6 @@ Hynek "APOmaster" Zamazal
 
 Jachym "Hekr" Stanek
 
-## Stash dotazů pro Píču
-	Dokumentace v angličtině
-	
-	Víc zdrojovejch souborů
-	
-	Rozdíl kódu na QTmips a desku
-	
-	Jak testovat knoby?
+## Stash dotazů pro Píšu
+
+Zatím nemáme žádné dotazy
