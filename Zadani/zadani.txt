@@ -1,17 +1,23 @@
-PONG
+Team: Jachym Stanek, Hynek Zamazal
 
-Hra pong, knobama se ovládají pálky.
+As our semestral project, we would like to make the classic computer game PONG. This game is basicaly a computer version of table tennis. It is a two player game, each player controls one paddle. There is a moving ball on the screen, the goal is to hit the ball with your paddle and direct it so that the other player cannot block it and the ball "passes through" the edge of the screen behind the other players paddle.
 
-Bude pause na oddech. Tam se dostaneš zmáčknutím prostředního knobu. V Pause bude menu, kde si vybereš "Continue" nebo "Exit".
-
-Skóre se zobrazuje na hrací obrazovce, jako v normálním pongu. Zároveň se zobrazuje na LED pásku - z každé strany se bude rosvěcovat jedna za každý gól.
-
-V okamžiku, kdy se rosvícené ledky na pásu potkají, je konec hry. Zobrazí se skóre a kdo vyhrál. A ledky budou blikat. Tlačítko Return to main menu/timeout.
-
-Pokud padne gól, stav hry se vypíše na stdout. Zablikají ledky a updatuje se skoreboard na display.
-
-Při spuštění programu se otevře hlavní menu, kde hráči mohou změnit svá jména, vstoupit do hry.
-
-Změna jmen probíhá přes stdin.
-
-
+Features:
+	The game
+		the paddles will be controlled by the rotating knobs
+		when player gets a point, the LEDs will blink
+		the score is indicated on the LED strip
+		the game ends, when all LEDs on the strip are on (the sum of both players score is 32)
+			the end screen pops up, showing, who won
+			the players can admire the app and then return to the main menu by pressing the middle knob
+	It will be possible to pause the game
+		Pause menu: return to the game, go to main menu
+	The main menu
+		start game
+		change player one name
+		change player two name
+	Serial port communication
+		used to change the players names
+		tells the status of the game (score, start, end...)
+		because of the difficulty of physical testing, it will be also somewhat possible to controll the game using a keyboard
+	
