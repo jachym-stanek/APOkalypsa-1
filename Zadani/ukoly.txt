@@ -22,3 +22,4 @@ akce při konci hry
 	display
 	return to main menu
 
+to bude pisovina tohle
