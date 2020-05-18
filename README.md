@@ -55,4 +55,3 @@ Branche jsou dobrý na separování vývoje různejch funkcionalit
 ## Markdown
 
 Cheat-sheat k markdownu je třeba [tady](https://guides.github.com/features/mastering-markdown/), je to fakt typu easy.
-
