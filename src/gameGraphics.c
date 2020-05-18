@@ -18,7 +18,7 @@ unsigned char *lcd_mem_base;
 unsigned char *led_mem_base;
 
 //sets up the memory addresses for displaying
-int dispSetup() {
+int disp_setup() {
 	lcd_mem_base = map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
   	if (lcd_mem_base == NULL) {
     	return DISP_ERR;
@@ -36,40 +36,40 @@ int dispSetup() {
 }
 
 //sets the LCD to black and turns off all LEDs
-void cleanSlate() {
+void clean_slate() {
 	//clear the LEDs
-	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_LINE_o) = BLACK;
-  	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK;
-  	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_LINE_o) = BLACK_COLOR;
+  	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+  	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
   	
   	//clear the LCD display
   	for (int i = 0; i < DISP_HEIGHT ; i++) {
     for (int j = 0; j < DISP_WIDTH ; j++) {
-      	parlcd_write_data(lcd_mem_base, BLACK);
+      	parlcd_write_data(lcd_mem_base, BLACK_COLOR);
     }
   }
 }
 
 //displays the current game state on the LCD and LED strip
-void dispGame(int Apts, int Bpts, int Apad, int Bpad, int ball[]) {
+void disp_game(int Apts, int Bpts, int Apad, int Bpad, int ball[]) {
 	uint16_t *buffer = (uint16_t*)malloc(sizeof(uint16_t) * DISP_WIDTH * DISP_HEIGHT);
-	prepImage(buffer, Apad, Bpad, ball);
+	prep_image(buffer, Apad, Bpad, ball);
 	display(buffer);
 	
-	showScore(Apts, Bpts);
+	show_score(Apts, Bpts);
 }
 
 //prepares the image to be displayed on the LCD
-void prepImage(uint16_t *buffer, int Apad, int Bpad, int ball[]) {
+void prep_image(uint16_t *buffer, int Apad, int Bpad, int ball[]) {
 	unsigned int c;
 	for (int row = 0; row < DISP_HEIGHT; row++) {
 		for (int col = 0; col < DISP_WIDTH; col++) {
-			if (isPaddle(Apad, Bpad, row, col)) {
-				c = WHITE;
-			} else if (isBall(ball, row, col)) {
-				c = RED;
+			if (is_paddle(Apad, Bpad, row, col)) {
+				c = WHITE_COLOR;
+			} else if (is_ball(ball, row, col)) {
+				c = RED_COLOR;
 			} else {
-				c = LIGHT_BLUE;
+				c = LIGHT_BLUE_COLOR;
 			}
 			
 			buffer[(row*DISP_WIDTH)+col] = c;
@@ -85,7 +85,7 @@ void display(uint16_t *buffer) {
 }
 
 //checks, if a pixel is part of a paddle
-int isPaddle(int Apad, int Bpad, int row, int col) {
+int is_paddle(int Apad, int Bpad, int row, int col) {
 	if (PAD_OFFSET < col && col < (PAD_OFFSET + PAD_WIDTH)) {
 		if ((Apad -(PAD_HEIGHT/2)) < row && row < (Apad +(PAD_HEIGHT/2))) {
 			return 1;
@@ -100,13 +100,13 @@ int isPaddle(int Apad, int Bpad, int row, int col) {
 }
 
 //checks, if a pixel is part of the ball
-int isBall(int ball[], int row, int col) {
+int is_ball(int ball[], int row, int col) {
 	int pos = (col - ball[0])*(col - ball[0]) + (row - ball[1])*(row - ball[1]);
 	return pos <= (BALL_RAD*BALL_RAD);
 }
 
 //shows the score on the LED strip
-void showScore(int Apts, int Bpts) {
+void show_score(int Apts, int Bpts) {
 	uint32_t dispVal = 0x0;
 	
 	for (int x = 1; x <= MAX_SCORE_SUM; x++) {
