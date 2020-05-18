@@ -10,26 +10,26 @@
 #define BALL_RAD 15
 
 //sets up the memory addresses for displaying
-int dispSetup();
+int disp_setup();
 
 //sets the LCD to black and turns off all LEDs
-void cleanSlate();
+void clean_slate();
 
 //displays the current game state on the LCD and LED strip
-void dispGame(int Apts, int Bpts, int Apad, int Bpad, int ball[]);
+void disp_game(int Apts, int Bpts, int Apad, int Bpad, int ball[]);
 
 //prepares the image to be displayed on the LCD
-void prepImage(uint16_t *buffer, int Apad, int Bpad, int ball[]);
+void prep_image(uint16_t *buffer, int Apad, int Bpad, int ball[]);
 
 //sends the image in buffer to the LCD
 void display(uint16_t *buffer);
 
 //checks, if a pixel is part of a paddle
-int isPaddle(int Apad, int Bpad, int row, int col);
+int is_paddle(int Apad, int Bpad, int row, int col);
 
 //checks, if a pixel is part of the ball
-int isBall(int ball[], int row, int col);
+int is_ball(int ball[], int row, int col);
 
 //shows the score on the LED strip
-void showScore(int Apts, int Bpts);
+void show_score(int Apts, int Bpts);
 

@@ -12,14 +12,14 @@ typedef struct {
 	
 	int ballPos[2];
 	int ballVel[2];
-} gameStruct;
+} game_struct;
 
 //starts the game and handles the end
-void playGame();
+void play_game();
 
 //main function for playing the game
-int gameLoop(gameStruct *game);
+int game_loop(game_struct *game);
 
 //sets the gameStruct to the initial state
-void setupData(gameStruct *game);
+void setup_data(game_struct *game);
 

@@ -7,11 +7,11 @@
 #include "gameGraphics.h"
 
 //starts the game and handles the end
-void playGame() {
-	gameStruct game;
-	setupData(&game);
+void play_game() {
+	game_struct game;
+	setup_data(&game);
 	
-	int check = gameLoop(&game);
+	int check = game_loop(&game);
 	
 	if (check == 1) {
 		printf("Player A won\n");
@@ -23,14 +23,14 @@ void playGame() {
 }
 
 //main function for playing the game
-int gameLoop(gameStruct *game) {
-	dispGame(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
+int game_loop(game_struct *game) {
+	disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 	printf("Game loop would start now\n");
 	return 0;
 }
 
 //This function prepares the game data
-void setupData(gameStruct *game) {
+void setup_data(game_struct *game) {
 	game->Apts = 0;
 	game->Bpts = 0;
 	

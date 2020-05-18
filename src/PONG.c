@@ -14,14 +14,14 @@ int main(int argc, char *argv[]) {
 	printf("Testing PONG\n");
 	
 	//clean the periferies
-	int check = dispSetup();
+	int check = disp_setup();
 	if (check != SUCCESS) {
 		fprintf(stderr, "Unable to access periferies!\n");
 		return DISP_ERR;
 	}
-	cleanSlate();
+	clean_slate();
 	
-	playGame();
+	play_game();
 	return SUCCESS;
 }
 
