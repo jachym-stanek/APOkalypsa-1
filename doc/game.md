@@ -8,13 +8,13 @@ It is 32, because the score of each player is shown on "his" side of the LED str
 
 This structure contains the current state of the game.
 
-* 'int Apts' - player A points
-* 'int Bpts' - player B points
-* 'int Apos' - vertical position of player A's paddle
-* 'int Bpos' - vertical position of player B's paddle
+* `int Apts`- player A points
+* `int Bpts` - player B points
+* `int Apos` - vertical position of player A's paddle
+* `int Bpos` - vertical position of player B's paddle
 	* the horizontal position of the paddles is fixed and defined in [gameGraphics.h](gameGraphics.md)
-* 'int ballPos[2]' - two element vector of the position of the ball
-* 'int ballVel[2]' - two element vector of the velocity of the ball
+* `int ballPos[2]` - two element vector of the position of the ball
+* `int ballVel[2]` - two element vector of the velocity of the ball
 
 ## void PlayGame()
 

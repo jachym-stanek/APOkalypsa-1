@@ -24,20 +24,20 @@ Displays the position of ball and paddles on the LCD screen and the score of eac
 
 ## void prepImage(uint16_t *buffer, int Apad, int Bpad, int ball[])
 
-Writes an image of the game state to the '*buffer'.
+Writes an image of the game state to the `*buffer`.
 
 ## void display(uint16_t *buffer)
 
-Displays whatever is in the '*buffer' to the LCD sreen.
+Displays whatever is in the `*buffer` to the LCD sreen.
 
 ## int isPaddle(int Apad, int Bpad, int row, int col)
 
-If pixel in row - 'row' and column - 'col' is part of an image of a paddle returns 1, othervise returns 0
+If pixel in row - `row` and column - `col` is part of an image of a paddle returns 1, othervise returns 0
 
 ## int isBall(int ball[], int row, int col);
 
-If pixel in row - 'row' and column - 'col' is part of the image of the ball returns 1, othervise returns 0
+If pixel in row - `row` and column - `col` is part of the image of the ball returns 1, othervise returns 0
 
 ## void showScore(int Apts, int Bpts)
 
-Lights up 'Apts' LEDs on the left side and 'Bpts' LEDs on the right side of the LED strip.
+Lights up `Apts` LEDs on the left side and `Bpts` LEDs on the right side of the LED strip.
