@@ -10,6 +10,10 @@ Jachym Stanek
 
 Zatím nemáme žádné dotazy
 
+# Coding guidelines
+
+Please clean the compiled files before uploading to git. (Use `make clean`.)
+
 # Užitečné věci
 
 Pro kompilaci na starých deskách (těch na YouTube), je potřeba zakomentovat řádek `#define ILI9481` v mzapo_parlcd.c
