@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 *	 Things like the function playGame() game will be called in completely different
 *   ways, if at all.
 **/
-	printf("Testing PONG\n");
+	printf("Testing PONG v 2.0\n");
 	
 	//clean the periferies
 	int check = disp_setup();
