@@ -55,7 +55,6 @@ void disp_game(int Apts, int Bpts, int Apad, int Bpad, int ball[]) {
 	uint16_t *buffer = (uint16_t*)malloc(sizeof(uint16_t) * DISP_WIDTH * DISP_HEIGHT);
 	prep_image(buffer, Apad, Bpad, ball);
 	display(buffer);
-	
 	show_score(Apts, Bpts);
 }
 
