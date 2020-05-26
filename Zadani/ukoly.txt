@@ -22,5 +22,4 @@ akce při konci hry
 	blikání LED
 	display
 	return to main menu
-
-to bude pisovina tohle
+	

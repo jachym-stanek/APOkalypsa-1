@@ -1,16 +1,18 @@
 # APOkalypsa
-Seminary work for the APO subject in summer semester of 2020. The PONG game on MZapo platform.
+Seminary work for the APO subject in summer semester of 2020. The PONG game on the MZapo platform.
 
 ## Team
-Hynek "APOmaster" Zamazal
+Hynek Zamazal
 
-Jachym "Hekr" Stanek
+Jachym Stanek
 
-## Stash dotazů pro Píšu
+## Stash dotazů
 
 Zatím nemáme žádné dotazy
 
 # Užitečné věci
+
+Pro kompilaci na starých deskách (těch na YouTube), je potřeba zakomentovat řádek `#define ILI9481` v mzapo_parlcd.c
 
 ## git
 
