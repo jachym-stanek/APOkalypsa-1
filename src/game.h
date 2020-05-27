@@ -2,8 +2,13 @@
 
 #include <stdbool.h>
 
-#define MAX_SCORE_SUM 32
 #define PAD_SPEED 8
+#define BALL_INIT_X 240
+#define BALL_INIT_Y 160
+#define PAD_INIT_POS 160
+#define INIT_X_VEL 9
+
+#define MAX_PTS 8
 
 //the structure for storing the current state of the game
 typedef struct {
@@ -19,6 +24,8 @@ typedef struct {
 	
 	int ballPos[2];
 	int ballVel[2];
+	
+	int rounds;
 } game_struct;
 
 unsigned char *mem_base;
@@ -38,12 +45,6 @@ int update(game_struct *game);
 //checks if goal was scored
 int check_goals(game_struct *game);
 
-//returns the knob position for the specified paddle
-short get_paddle_pos(char paddle);
-
-//checks if the middle knob is pressed
-bool get_pause();
-
 //change the paddle positions based on the knob input
 void update_paddles(game_struct *game);
 
@@ -53,4 +54,10 @@ void update_paddles(game_struct *game);
 * adjusts the velocity accordingly
 */
 void check_collisions(game_struct *game);
+
+/*
+* resets the ball and the paddles to default positions
+* increases the ball speed by 2
+*/
+void reset(game_struct *game);
 

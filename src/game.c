@@ -7,58 +7,73 @@
 #include "game.h"
 #include "gameGraphics.h"
 #include "PONG.h"
-
-#include "mzapo_phys.h"
-#include "mzapo_regs.h"
+#include "knobs.h"
+#include "pause.h"
 
 //starts the game and handles the end
 int play_game() {
 	game_struct game;
 	setup_data(&game);
 	
-	mem_base = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
-	if (mem_base == NULL) {
-		return MEM_ERR;
+	bool end = false;
+	int status = GAME;
+	while (!end) {
+		int check = game_loop(&game);
+		switch (check) {
+			case A_SCORED:
+				game.Apts++;
+				printf("Player A scored!\n");
+				reset(&game);
+				show_goal();
+				
+				if (game.Apts >= MAX_PTS) {
+					end = true;
+					status = A_WON;
+				}
+				break;
+				
+			case B_SCORED:
+				game.Bpts++;
+				printf("Player B scored!\n");
+				reset(&game);
+				show_goal();
+				
+				if (game.Bpts >= MAX_PTS) {
+					end = true;
+					status = B_WON;
+				}
+				break;
+				
+			case PAUSE:
+				pause_oper();
+				break;
+			default:
+				break;
+		}
 	}
-	
-	int check = game_loop(&game);
-	
-	if (check == 1) {
-		printf("Player A won\n");
-	} else if (check == 2) {
-		printf("Player B won\n");
-	} else {
-		printf("Unforseen outcome\n");
-	}
-	
-	return 0;
+		
+	return status;
 }
 
 //main function for playing the game
 int game_loop(game_struct *game) {
+	countdown();
 	game->Aold = get_paddle_pos('a');
 	game->Bold = get_paddle_pos('b');
 	disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 	
-	printf("starting the game loop\n");
-	while (!get_pause()) {
-		int goal = update(game);
-		disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
-		if (goal == 1) {
-			printf("Player A scored!\n");
-			game->Apts++;
-		} else if (goal == 2) {
-			printf("Player B scored!\n");
-			game->Bpts++;
-		}
-		printf("A: %d B: %d\n", game->Apts, game->Bpts);
-		if ((game->Apts+game->Bpts) >= MAX_SCORE_SUM) {
-			printf("The game has was won!\n");
+	int status = GAME;
+	while (status == GAME) {
+		if (get_pause()) {
+			status = PAUSE;
 			break;
 		}
+	
+		status = update(game);
+		disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 	}
-	printf("Ending the loop\n");
-	return 0;
+	
+	return status;
 }
 
 //This function prepares the game data
@@ -66,16 +81,18 @@ void setup_data(game_struct *game) {
 	game->Apts = 0;
 	game->Bpts = 0;
 	
-	game->ballPos[0] = 240;
-	game->ballPos[1] = 160;
+	game->ballPos[0] = BALL_INIT_X;
+	game->ballPos[1] = BALL_INIT_Y;
 	game->dA = 0;
 	game->dB = 0;
 	
-	game->ballVel[0] = 5;
+	game->ballVel[0] = INIT_X_VEL;
 	game->ballVel[1] = 0;
 	
-	game->Apos = 160;
-	game->Bpos = 160;
+	game->Apos = PAD_INIT_POS;
+	game->Bpos = PAD_INIT_POS;
+	
+	game->rounds = 0;
 }
 
 //update the game state
@@ -90,40 +107,13 @@ int update(game_struct *game) {
 
 //checks if goal was scored
 int check_goals(game_struct *game) {
-	if (game->ballPos[0] >= DISP_WIDTH) {
-		return 1;
-	} else if (game->ballPos[0] <= 0) {
-		return 2;
+	if ((game->ballPos[0]-BALL_RAD) >= DISP_WIDTH) {
+		return A_SCORED;
+	} else if ((game->ballPos[0]+BALL_RAD) <= 0) {
+		return B_SCORED;
 	} else {
-		return 0;
+		return GAME;
 	}
-}
-
-//returns the knob position for the specified paddle
-short get_paddle_pos(char paddle) {
-	uint32_t knobs = *(volatile uint32_t*)(mem_base + SPILED_REG_KNOBS_8BIT_o);
-	
-	short ret = 0;
-	if (paddle == 'a') {
-		ret = knobs>>16;
-		if ((ret>>8) != 0) {
-			ret = ret - ((ret>>8)<<8);
-		}
-	} else if (paddle == 'b') {
-		ret = (knobs<<16)>>16;
-		if ((ret>>8) != 0) {
-			ret = ret - ((ret>>8)<<8);
-		}
-	}
-	
-	return ret;
-}
-
-//checks if the middle knob is pressed
-bool get_pause() {
-	uint32_t knobs = *(volatile uint32_t*)(mem_base + SPILED_REG_KNOBS_8BIT_o);
-	knobs = knobs>>24;
-	return (knobs == 2);
 }
 
 //change the paddle positions based on the knob input
@@ -179,5 +169,20 @@ void check_collisions(game_struct *game) {
 				  (game->ballPos[1]+BALL_RAD) >= DISP_HEIGHT) {
 		game->ballVel[1] *= -1;
 	}
+}
+
+/*
+* resets the ball and the paddles to default positions
+* increases the ball speed by 2
+*/
+void reset(game_struct *game) {
+	game->rounds++;
+	game->Apos = PAD_INIT_POS;
+	game->Bpos = PAD_INIT_POS;
+	game->ballPos[0] = BALL_INIT_X;
+	game->ballPos[1] = BALL_INIT_Y;
+	game->ballVel[0] = INIT_X_VEL + 2*game->rounds;
+	game->ballVel[1] = 0;
+	disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 }
 

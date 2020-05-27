@@ -33,3 +33,23 @@ int is_ball(int ball[], int row, int col);
 //shows the score on the LED strip
 void show_score(int Apts, int Bpts);
 
+//plays the goal sequence
+void show_goal();
+
+//move 4 leds from right to left
+void right_slide();
+
+//move 4 leds from left to right
+void left_slide();
+
+//switch colors on the right RGB LED
+void blink_right_RGB();
+
+//switch colors on the left RGB LED
+void blink_left_RGB();
+
+//switch_colors on both RGB LEDs
+void blink_both_RGB();
+
+//blink RGB LEDs as start lights
+void countdown();
