@@ -42,12 +42,6 @@ void right_slide();
 //move 4 leds from left to right
 void left_slide();
 
-//switch colors on the right RGB LED
-void blink_right_RGB();
-
-//switch colors on the left RGB LED
-void blink_left_RGB();
-
 //switch_colors on both RGB LEDs
 void blink_both_RGB();
 

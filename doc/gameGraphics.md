@@ -1,13 +1,8 @@
 **DISP_WIDTH** - the width of the LCD screen
-
 **DISP_HEIGHT** - the height of the LCD screen
-
 **PAD_HEIGHT** - the height of a paddle
-
 **PAD_WIDTH** - the width of a paddle
-
 **PAD_OFFSET** - the distance between a paddle and the edge of the screen
-
 **BALL_RAD** - the radius of the ball
 
 ### int dispSetup()
@@ -41,3 +36,23 @@ If pixel in row - `row` and column - `col` is part of the image of the ball retu
 ## void showScore(int Apts, int Bpts)
 
 Lights up `Apts` LEDs on the left side and `Bpts` LEDs on the right side of the LED strip.
+
+## void show_goal()
+
+Plays a blinking sequence when a goal is scored
+
+## void right_slide()
+
+4 LEDs slide from right to left on the LED strip
+
+## void left_slide()
+
+4 LEDs slide from left to right on the LED strip
+
+## void blink_both_RGB()
+
+Both RGB LEDs blink red, green and blue
+
+## void countdown()
+
+Flashes the RGB LEDs white as start countdown

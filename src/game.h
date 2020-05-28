@@ -28,8 +28,6 @@ typedef struct {
 	int rounds;
 } game_struct;
 
-unsigned char *mem_base;
-
 //starts the game and handles the end
 int play_game();
 

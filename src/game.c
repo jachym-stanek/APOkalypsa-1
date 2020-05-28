@@ -57,10 +57,10 @@ int play_game() {
 
 //main function for playing the game
 int game_loop(game_struct *game) {
+	disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 	countdown();
 	game->Aold = get_paddle_pos('a');
 	game->Bold = get_paddle_pos('b');
-	disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
 	
 	int status = GAME;
 	while (status == GAME) {

@@ -5,6 +5,8 @@
 #include "mzapo_phys.h"
 #include "mzapo_regs.h"
 
+unsigned char *mem_base;
+
 bool knobs_init() {
 	mem_base = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
 	if (mem_base == NULL) {
@@ -28,6 +30,8 @@ short get_paddle_pos(char paddle) {
 		if ((ret>>8) != 0) {
 			ret = ret - ((ret>>8)<<8);
 		}
+	} else {
+		return -1;
 	}
 	
 	return ret;

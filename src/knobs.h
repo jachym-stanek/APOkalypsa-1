@@ -1,8 +1,6 @@
 //the header file for knobs.c
 #include <stdbool.h>
 
-unsigned char *mem_base;
-
 //initialize the memory
 bool knobs_init();
 

@@ -1,6 +1,6 @@
 The documentation for this project is split into different files. This file contains some general information about the implementation and documentation for some functions, that do not require separate file.
 
-##Contents
+## Contents
 
 Functions from these are in this file:
 
@@ -9,20 +9,22 @@ Functions from these are in this file:
 
 For description of other functions, please check out the following files:
 
-* [game.c] (game.md)
-* [gameGraphics.c] (gameGraphics.md)
+* [game.c](game.md)
+* [gameGraphics.c](gameGraphics.md)
+* [pause.c](pause.md)
+* [knobs.c](knobs.md)
 
-#General information
+# General information
 
 The main game data is stored in the structure [gameStruct](game.md).
 
 Player A has the paddle on the left side of the screen and is controlled with the leftmost knob. Player B has the paddle on the right side of the screen and is controlled with the rightmost knob.
 
-#Desrcription of some functions
+# Desrcription of some functions
 
 Here, you can find descriptions of functions, that did not necessitate their separate file.
 
-##PONG.c
+## PONG.c
 
 The main file of the project.
 
@@ -30,10 +32,18 @@ The main file of the project.
 
 **DISP_ERR** - return value of function that encountered a displaying error
 
-###int main (int argc, char *argv[])**
+**status** - an enumeration representing the game state
+	* `GAME` - the game is being played
+	* `A_SCORED` - player A scored
+	* `B_SCORED` - player B scored
+	* `PAUSE` - the game is paused
+	* `A_WON` - player A won
+	* `B_WON` - player B won
+
+### int main (int argc, char *argv[])**
 
 The main method of the project. It opens the main menu.
 
-##colors.h
+## colors.h
 
 This file contains color templates, so that the coloring of the application is the same throughout.
