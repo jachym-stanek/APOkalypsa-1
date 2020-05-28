@@ -1,8 +1,13 @@
 **DISP_WIDTH** - the width of the LCD screen
+
 **DISP_HEIGHT** - the height of the LCD screen
+
 **PAD_HEIGHT** - the height of a paddle
+
 **PAD_WIDTH** - the width of a paddle
+
 **PAD_OFFSET** - the distance between a paddle and the edge of the screen
+
 **BALL_RAD** - the radius of the ball
 
 ### int dispSetup()
