@@ -33,18 +33,12 @@ The main file of the project.
 **DISP_ERR** - return value of function that encountered a displaying error
 
 **status** - an enumeration representing the game state
-
-	* `GAME` - the game is being played
-	
-	* `A_SCORED` - player A scored
-	
-	* `B_SCORED` - player B scored
-	
-	* `PAUSE` - the game is paused
-	
-	* `A_WON` - player A won
-	
-	* `B_WON` - player B won
+* `GAME` - the game is being played
+* `A_SCORED` - player A scored
+* `B_SCORED` - player B scored
+* `PAUSE` - the game is paused
+* `A_WON` - player A won
+* `B_WON` - player B won
 
 ### int main (int argc, char *argv[])**
 

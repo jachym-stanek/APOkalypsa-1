@@ -1,9 +1,14 @@
 
 **PAD_SPEED 8** - the change of the knobs is multiplied by this number when paddle movements are being caluclated
+
 **BALL_INIT_X 240** - the initial horizonal position of the ball
+
 **BALL_INIT_Y 160** - the initial vertical position of the ball
+
 **PAD_INIT_POS 160** - the initial position of the paddles
+
 **INIT_X_VEL 9** - the horizontal velocity of the ball at the start of the game
+
 **MAX_PTS 8** - when one of the players reaches this number, they win
 
 ### structure gameStruct
