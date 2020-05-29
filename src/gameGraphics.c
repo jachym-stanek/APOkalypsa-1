@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <unistd.h>
+#include <time.h>
 
 #include "gameGraphics.h"
 #include "PONG.h"
@@ -31,7 +33,6 @@ int disp_setup() {
   	
   parlcd_hx8357_init(lcd_mem_base);
   parlcd_write_cmd(lcd_mem_base, 0x2c);
-  
   return SUCCESS;
 }
 
@@ -55,7 +56,6 @@ void disp_game(int Apts, int Bpts, int Apad, int Bpad, int ball[]) {
 	uint16_t *buffer = (uint16_t*)malloc(sizeof(uint16_t) * DISP_WIDTH * DISP_HEIGHT);
 	prep_image(buffer, Apad, Bpad, ball);
 	display(buffer);
-	
 	show_score(Apts, Bpts);
 }
 
@@ -65,11 +65,11 @@ void prep_image(uint16_t *buffer, int Apad, int Bpad, int ball[]) {
 	for (int row = 0; row < DISP_HEIGHT; row++) {
 		for (int col = 0; col < DISP_WIDTH; col++) {
 			if (is_paddle(Apad, Bpad, row, col)) {
-				c = WHITE_COLOR;
+				c = BLACK_COLOR;
 			} else if (is_ball(ball, row, col)) {
-				c = RED_COLOR;
+				c = GREEN_COLOR;
 			} else {
-				c = LIGHT_BLUE_COLOR;
+				c = BACKGROUND_COLOR;
 			}
 			
 			buffer[(row*DISP_WIDTH)+col] = c;
@@ -109,16 +109,105 @@ int is_ball(int ball[], int row, int col) {
 void show_score(int Apts, int Bpts) {
 	uint32_t dispVal = 0x0;
 	
-	for (int x = 1; x <= MAX_SCORE_SUM; x++) {
-		if (x <= Apts || x > (MAX_SCORE_SUM-Bpts)) {
+	for (int x = 1; x <= 32; x++) {
+		if (x <= Apts || x > (32-Bpts)) {
 			dispVal += 1;
 		}
 		
-		if (x != MAX_SCORE_SUM) {
+		if (x != 32) {
 			dispVal<<=1;
 		}
 	}
 	
 	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_LINE_o) = dispVal;
+}
+
+//plays the goal sequence
+void show_goal() {
+	right_slide();
+	left_slide();
+	
+	right_slide();
+	left_slide();
+	
+	blink_both_RGB();
+	
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
+}
+
+//move 4 leds from right to left
+void right_slide() {
+	uint32_t dispVal = 0x1;
+	struct timespec loop_delay = {.tv_sec = 0, .tv_nsec = 6000000};
+
+	for (int x = 0; x < 36; x++) {
+		dispVal = dispVal<<1;
+		if ( x < 4) { dispVal += 1;}
+		*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_LINE_o) = dispVal;
+		clock_nanosleep(CLOCK_MONOTONIC, 0, &loop_delay, NULL);
+	}
+}
+
+//move 4 leds from left to right
+void left_slide() {
+	uint32_t dispVal = 0x1;
+	dispVal = dispVal<<31;
+	struct timespec loop_delay = {.tv_sec = 0, .tv_nsec = 6000000};
+
+	for (int x = 0; x < 36; x++) {
+		dispVal = dispVal>>1;
+		if ( x < 4) {
+			dispVal += (0x1<<31);
+		}
+		*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_LINE_o) = dispVal;
+		clock_nanosleep(CLOCK_MONOTONIC, 0, &loop_delay, NULL);
+	}
+}
+
+//switch_colors on both RGB LEDs
+void blink_both_RGB() {
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 80000000};
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLUE_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLUE_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = GREEN_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = GREEN_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = RED_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = RED_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+}
+
+//blink RGB LEDs as start lights
+void countdown() {
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 300000000};
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = WHITE_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = WHITE_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = WHITE_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = WHITE_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = WHITE_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = WHITE_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	
+	delay.tv_nsec = 600000000;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = GREEN_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = GREEN_COLOR;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB1_o) = BLACK_COLOR;
+	*(volatile uint32_t*)(led_mem_base + SPILED_REG_LED_RGB2_o) = BLACK_COLOR;
 }
 
