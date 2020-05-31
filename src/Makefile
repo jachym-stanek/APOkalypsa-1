@@ -7,7 +7,7 @@ CXXFLAGS = -g -std=gnu++11 -O1 -Wall
 LDFLAGS = -lrt -pthread
 
 SOURCES = PONG.c game.c gameGraphics.c pause.c knobs.c main_menu.c
-SOURCES += text_plot_lib.c
+SOURCES += text_plot_lib.c non_block.c
 SOURCES +=  mzapo_phys.c mzapo_parlcd.c
 SOURCES += font_prop14x16.c font_rom8x16.c
 TARGET_EXE = output.o
