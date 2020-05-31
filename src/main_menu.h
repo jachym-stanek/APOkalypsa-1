@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#define P_NAME_LEN 12
 
 // menu data struct
 typedef struct {
