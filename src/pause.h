@@ -2,8 +2,6 @@
 
 #include <stdbool.h>
 
-#include "game.h"
-
 typedef struct {
 	char tab;
 	bool end;
@@ -23,10 +21,7 @@ void info_pause(void);
 
 void light_leds_pause(void);
 
-void tab_pressed_pause(void);
-
-//operations to be done on pause
-void pause_oper(game_struct * game);
+void pause_oper(void);
 
 void tab_pressed_pause(void);
 

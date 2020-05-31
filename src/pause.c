@@ -20,7 +20,7 @@
 unsigned char *parlcd_mem_base;
 unsigned char *parled_mem_base;
 
-pause_data_t PAUSE_DATA = { .tab = '1', .end = false };
+pause_data_t PAUSE_DATA;
 
 
 bool init_perifs_pause(void){
@@ -37,9 +37,6 @@ bool init_perifs_pause(void){
   	if (!knobs_init()){
   		return false;
   	}
-
-	parlcd_hx8357_init(parlcd_mem_base);
- 	parlcd_write_cmd(parlcd_mem_base, 0x2c);
  	return true;
 }
 
@@ -122,9 +119,10 @@ void light_leds_pause(void){
 }
 
 
-//operations to be done on pause
-void pause_oper(game_struct * game){
+void pause_oper(void){
 	printf("The game has been paused!\n");
+	PAUSE_DATA.tab = '1';
+	PAUSE_DATA.end = false;
 	init_perifs_pause();
 	pause_graphics();
 	pause_loop();
@@ -159,7 +157,7 @@ void pause_loop(void){
 				case '1':
 				case '2':
 					PAUSE_DATA.tab = in;	// tell probram new position to fill
-					menu_graphics();
+					pause_graphics();
 					tab_pressed_pause();
 					break;
 				case 'h':
@@ -178,7 +176,7 @@ void pause_loop(void){
 		else if (get_paddle_pos('a') < PAUSE_DATA.last_knob_pos - 15){
 			if (PAUSE_DATA.tab != '1'){
 				PAUSE_DATA.tab = '1';
-				menu_graphics();			
+				pause_graphics();			
 			}
 			PAUSE_DATA.last_knob_pos = get_paddle_pos('a');
 		}
@@ -187,7 +185,7 @@ void pause_loop(void){
 		else if (get_paddle_pos('a') > PAUSE_DATA.last_knob_pos + 15){
 			if (PAUSE_DATA.tab != '2'){
 				PAUSE_DATA.tab = '2';
-				menu_graphics();
+				pause_graphics();
 			}
 			PAUSE_DATA.last_knob_pos = get_paddle_pos('a');
 		}
