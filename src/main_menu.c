@@ -128,11 +128,9 @@ void info(void){
 void menu_text(uint16_t * data){
 	// player1 name
 	plot_text(60, 22, strlen(MENU_DATA.Player1_name), MENU_DATA.Player1_name, data, WHITE_COLOR_LCD, 3);
-	printf("Pl1 name: %s\n", MENU_DATA.Player1_name);
 
 	// player2 name
 	plot_text(60, 98, strlen(MENU_DATA.Player2_name), MENU_DATA.Player2_name, data, WHITE_COLOR_LCD, 3);
-	printf("Pl2 name: %s\n", MENU_DATA.Player2_name);
 
 	// start game
 	char * text = "Start Game";
