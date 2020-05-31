@@ -5,23 +5,37 @@
 #include <stdbool.h>
 
 
-/* changes Player #x name */
-void change_player_name(int player);
+// menu data struct
+typedef struct {
+	char * Player1_name;
+	char * Player2_name;
+	char tab; 	// currently selected tab
+	int last_knob_pos; 	// last knob position when tab was changed
+} menu_data_t;
 
-/* end menu instace and start game loop */
+
+bool init_perifs(void);
+
+void display_data(uint16_t * data);
+
+void change_player_name(char player);
+
 void start_game(void);
 
-/* exit program */
 void exit_program(void);
 
-/* unexpected input warning */
 void wrong_key(void);
 
-/* menu startup message */
 void welcome(void);
 
-/* creates graphics on LCD for menu */
+void info(void);
+
+void menu_text(uint16_t * data);
+
+void tab_pressed(void);
+
 void menu_graphics(void);
 
-/* starts main menu gui */
+void light_leds(void);
+
 void menu_startup(void);

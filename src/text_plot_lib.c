@@ -2,102 +2,74 @@
 
 #define _POSIX_C_SOURCE 200112L
 
+#include "text_plot_lib.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "mzapo_parlcd.h"
-#include "mzapo_phys.h"
-#include "mzapo_regs.h"
 #include "font_types.h"
+#include "main_menu.h"
+#include "colors.h"
 
 
-/* display data onto LCD 
- * data = array of size 320x480
- */
-void display_data(uint16_t * data){
-	// map display
-	unsigned char *parlcd_mem_base;
-	parlcd_mem_base = map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
-	if (parlcd_mem_base == NULL)
-	exit(1);
-
- 	parlcd_hx8357_init(parlcd_mem_base);
- 	parlcd_write_cmd(parlcd_mem_base, 0x2c);
-
- 	// display text
- 	for (int i = 0; i < 320 ; i++) {
-	    for (int j = 0; j < 480 ; j++) {
-    	 	parlcd_write_data(parlcd_mem_base, data[i*480 + j]);
-	    }
- 	}
-
- 	free(data);
+int char_width(font_descriptor_t* fdes, int ch){
+  int width = 0;
+  if ((ch >= fdes->firstchar) && (ch-fdes->firstchar < fdes->size)) {
+    ch -= fdes->firstchar;
+    if (!fdes->width) {
+      width = fdes->maxwidth;
+    } else {
+      width = fdes->width[ch];
+    }
+  }
+  return width;
 }
 
 
-bool plot_text_grid(int num_chars, uint32_t text[num_chars], int start_pos[2], int size, 
-					unsigned int background_color, unsigned int text_color, 
-					unsigned int text_background_color) {
-	font_descriptor_t font = font_rom8x16;
-	uint16_t * text_data = (uint16_t *) malloc(sizeof(uint16_t) * 320 * 480);
+void plot_char(int x, int y, font_descriptor_t* fdes, char ch, uint16_t *data, uint16_t color, int size){
+	int w = char_width(fdes, ch);
 
-	int x = 0;		// how many char cells were done
-	int pix = 0;
-
-	// for cell in grid
-	for (int i = 0; i < 320/font.height/size; i++) {
-		for (int j = 0; j < 480/font.maxwidth/size; j++) {
-
-			// for pixel cell
-			bool contains_char = false; 	// does cell contain char
-			if ( (x >= 1 && x < num_chars) || (start_pos[0] == i && start_pos[1] == j) ){
-				contains_char = true;
-				x += 1;
+	for (int i = 0; i < 16; ++i){
+		for (int j = 0; j < w; ++j){
+			uint16_t bit_num = fdes->bits[(ch-0x20)*16 + i]; 	// bit map off set - char + row
+			// if jth bit in bitnum is 1
+			if ( (bit_num >> (fdes->maxwidth + 1 - j)) & 1 ){
+				for (int pix_y = 0; pix_y < size; ++pix_y){
+					for (int pix_x = 0; pix_x < size; ++pix_x){
+						int x_coord = x+j*size+pix_x;
+						int y_coord = y+i*size+pix_y;
+						if (x_coord>=0 && x_coord<480 && y_coord>=0 && y_coord<320){
+							data[x_coord + 480*y_coord] = color;
+							//printf("X");
+						}
+					}
+				}
 			}
-
-			for (int cell_row = 0; cell_row < font.height; cell_row++) {
-		    	for (int cell_col = 0; cell_col < font.maxwidth; cell_col++) {
-
-		    		// for nxn pixel (if size is > 1)
-		    		for (int rw = 0; rw < size; ++rw){
-		    			for (int cl = 0; cl < size; ++cl){
-		    				int offset = (i*font.height*size+cell_row+rw)*480 + j*size*font.maxwidth+cell_col+cl;
-		    				printf("Attempting offset %d\n", offset);
-		    				// if any xth num should be in this cell
-					    	if (contains_char){
-					    		// if cell_rowth bit of cell_colth bit map number is 1, color bit 
-					    		uint16_t bit_map_num = font.bits[text[x]+cell_row];
-					    		if ( (bit_map_num >> (font.maxwidth - 1 - cell_col+8)) & 1 ){
-					    			text_data[offset] = text_color;
-					    		}
-					    		else{
-				    				text_data[offset] = text_background_color;
-					    		}
-					    	}
-				    	 	else{
-				    	 		text_data[offset] = background_color;
-				    	 	}
-
-				    	 	pix += 1;
-	    	 			}
-	    			}	
-	    		}		
-		    }
-	    }
- 	}
-
- 	// could not plot all chars
- 	if (x < num_chars){
- 		printf("WARNING: Could not plot all chars\n");
- 		return false;
- 	}
-
- 	printf("Went through %d pixels, display is %d pixels\n", pix, 480*320);
-	display_data(text_data);
-	return true;
+			else{
+					//printf("-");
+			}
+		}
+		//printf("\n");
+	}
 }
 
+
+void plot_text(int x, int y, int num_chars, char text[num_chars], uint16_t *data, uint16_t color, int size){
+	font_descriptor_t* fdes = &font_winFreeSystem14x16;
+	int line_start = x;
+
+	for (int i = 0; i < num_chars; ++i){
+		if (text[i] == '\n'){
+			x = line_start;
+			y += 16*size;
+		}
+		else{
+			plot_char(x, y, fdes, text[i], data, color, size);
+			x += char_width(fdes, text[i])*size;
+		}
+	}
+}
 
