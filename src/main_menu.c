@@ -16,10 +16,14 @@
 #include "text_plot_lib.h"
 #include "colors.h"
 #include "knobs.h"
+#include "game.h"
+#include "PONG.h"
+#include "gameGraphics.h"
+#include "menu_utils.h"
 
 
 // global menu data
-menu_data_t MENU_DATA = {"Player1", "Player2", '3'};
+menu_data_t MENU_DATA = {.tab = '3'};
 
 // LCD and LED memory bases
 unsigned char *parlcd_mem_base;
@@ -36,49 +40,40 @@ bool init_perifs(void){
   	if (parled_mem_base == NULL) {
     	return false;
   	}
-
-  	if (!knobs_init()){
+  	
+  	MENU_DATA.Player1_name = (char*)malloc((P_NAME_LEN+1)*sizeof(char));
+  	MENU_DATA.Player2_name = (char*)malloc((P_NAME_LEN+1)*sizeof(char));
+  	if (MENU_DATA.Player1_name == NULL ||MENU_DATA.Player2_name == NULL) {
   		return false;
   	}
   	
-	parlcd_hx8357_init(parlcd_mem_base);
- 	parlcd_write_cmd(parlcd_mem_base, 0x2c);
+  	strcpy(MENU_DATA.Player1_name, "Player 1");
+  	strcpy(MENU_DATA.Player2_name, "Player 2");
+  	
  	return true;
-}
-
-
-void display_data(uint16_t * data){
- 	// display text
- 	for (int i = 0; i < 320 ; i++) {
-	    for (int j = 0; j < 480 ; j++) {
-    	 	parlcd_write_data(parlcd_mem_base, data[i*480 + j]);
-	    }
- 	}
-
- 	free(data);
 }
 
 
 void change_player_name(char player){
 	printf("Please enter Player%c's name\n", player);
-	printf("No spaces allowed, maximum name length is 12!\n");
+	printf("No spaces allowed, maximum name length is %d!\n", P_NAME_LEN);
 	// 12 is max size that can be displayed
-	char new_name[13];
+	static char new_name[P_NAME_LEN+1];
 
 	scanf("%12s", new_name);
 
 	if (player == '1'){
-		MENU_DATA.Player1_name = new_name;
+		strcpy(MENU_DATA.Player1_name, new_name);
 	}
 	else if (player == '2'){
-		MENU_DATA.Player2_name = new_name;
+		strcpy(MENU_DATA.Player2_name, new_name);
 	}
 	else{
 		fprintf(stderr, "WARNING: Function 'change_player_name' takes wrong argument!\n");
 	}
 	
 	char g;
-	while ( (g = getchar()) != '\n') {};	// discard garbage from people who cant read
+	while ( (g = getchar()) != '\n') {};	// discard garbage from people who can't read
 
 	printf("Player%c's name changed to %s\n", player, new_name);
 	// update name on screen
@@ -87,23 +82,24 @@ void change_player_name(char player){
 
 
 void start_game(void){
-	// Hynkovo funkce
-	printf("Game running\n");
+	int status = play_game();
+	
+		
+	if (status == A_WON) {
+		printf("Player A won!\n");
+	} else if (status == B_WON) {
+		printf("Player B won!\n");
+	} else {
+		printf("Unexpected outcome!\n");
+	}
 }
 
 
 void exit_program(void){
 	printf("Exiting game\n");
-
-	// change screen to black
-	uint16_t * data = (uint16_t *) malloc(sizeof(uint16_t) * 320 * 480);
-	for (int i = 0; i < 320; ++i){
-		for (int j = 0; j < 480; ++j){
-			data[i*480 + j] = BLACK_COLOR;
-		}
-	}
-
-	display_data(data);
+	clean_slate();
+	free(MENU_DATA.Player1_name);
+	free(MENU_DATA.Player2_name);
 	exit(0);
 }
 
@@ -115,7 +111,6 @@ void wrong_key(void){
 
 
 void welcome(void){
-	printf("Game started\n");
 	info();
 	MENU_DATA.last_knob_pos = get_paddle_pos('a');
 }
@@ -206,7 +201,7 @@ void menu_graphics(void){
 
 
 	menu_text(data);
-	display_data(data);
+	display_data(data, parlcd_mem_base);
 	light_leds();
 }
 
@@ -264,19 +259,22 @@ void menu_startup(void){
 	
 	// initialize GUI
 	menu_graphics();
-	char in;
+	unsigned char in;
+	int t;
 
 	// main menu loop
 	while (1){
 		// input from keyboard
-		if ( (in = getchar()) ) {
+		t = getc_timeout(STDIN_FILENO, READ_TIMEOUT, &in);
+
+		if (t == 1) {
 			printf("Got input: %c\n", in);
 			switch (in) {
 				case '1':
 				case '2':
 				case '3':
 				case '4':
-					MENU_DATA.tab = in;	// tell probram new position to fill
+					MENU_DATA.tab = in;	// tell program new position to fill
 					menu_graphics();
 					tab_pressed();
 					break;
