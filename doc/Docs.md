@@ -13,6 +13,8 @@ For description of other functions, please check out the following files:
 * [gameGraphics.c](gameGraphics.md)
 * [pause.c](pause.md)
 * [knobs.c](knobs.md)
+* [main_menu.c](main_menu.md)
+* [text_plot_lib.c](text_plot_lib.md)
 
 # General information
 
