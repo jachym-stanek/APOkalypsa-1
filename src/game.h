@@ -25,6 +25,9 @@ typedef struct {
 	int ballPos[2];
 	int ballVel[2];
 	
+	char * Aname;
+	char * Bname;
+	
 	int rounds;
 } game_struct;
 
