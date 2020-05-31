@@ -19,6 +19,7 @@
 #include "game.h"
 #include "PONG.h"
 #include "gameGraphics.h"
+#include "non_block.h"
 
 
 // global menu data
@@ -270,12 +271,12 @@ void menu_startup(void){
 	
 	// initialize GUI
 	menu_graphics();
-	char in;
+	unsigned char in;
 
 	// main menu loop
 	while (1){
 		// input from keyboard
-		if ( (in = getchar()) ) {
+		if (0 != getc_timeout(0, 500, &in) ) {
 			printf("Got input: %c\n", in);
 			switch (in) {
 				case '1':
@@ -295,11 +296,8 @@ void menu_startup(void){
 					wrong_key();
 					break;
 			}
-		}
-
-
 		// knob turn left = go up in menu
-		else if (get_paddle_pos('a') < MENU_DATA.last_knob_pos - 15){
+		} else if (get_paddle_pos('a') < MENU_DATA.last_knob_pos - 15){
 			if (MENU_DATA.tab != '1'){
 				MENU_DATA.tab -= 1;
 				menu_graphics();
