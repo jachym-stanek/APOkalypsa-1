@@ -17,8 +17,6 @@ typedef struct {
 
 bool init_perifs(void);
 
-void display_data(uint16_t * data);
-
 void change_player_name(char player);
 
 void start_game(void);
