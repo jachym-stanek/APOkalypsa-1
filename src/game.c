@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "game.h"
 #include "gameGraphics.h"
@@ -61,8 +62,8 @@ int game_loop(game_struct *game) {
 	countdown();
 	game->Aold = get_paddle_pos('a');
 	game->Bold = get_paddle_pos('b');
-	
 	int status = GAME;
+	struct timespec loop_delay = {.tv_sec = 0, .tv_nsec = 500000};
 	while (status == GAME) {
 		if (get_pause()) {
 			status = PAUSE;
@@ -71,6 +72,7 @@ int game_loop(game_struct *game) {
 	
 		status = update(game);
 		disp_game(game->Apts, game->Bpts, game->Apos, game->Bpos, game->ballPos);
+		clock_nanosleep(CLOCK_MONOTONIC, 0, &loop_delay, NULL);
 	}
 	
 	return status;
@@ -122,8 +124,12 @@ void update_paddles(game_struct *game) {
 	short Bnow = get_paddle_pos('b');
 	
 	game->dA = game->Aold - Anow;
-	game->Aold = Anow;
+	game->dA = game->dA > 200 ? ((255-game->Aold)+Anow) : game->dA; //stabilization of crossing the knob max overflow max->min
+	game->dA = game->dA < -200 ? -1*((255-Anow)+game->Aold) : game->dA; //stabilization of crossing the knob max overflow max<-min
+ 	game->Aold = Anow;
 	game->dB = game->Bold - Bnow;
+	game->dB = game->dB > 200 ? ((255-game->Bold)+Bnow): game->dB;	//stabilization of crossing the knob max overflow max->min
+	game->dB = game->dB < -200 ? -1*((255-Bnow)+game->Bold) : game->dB; //stabilization of crossing the knob max overflow max<-min
 	game->Bold = Bnow;
 	
 	if ((game->Apos + (game->dA*PAD_SPEED)) > DISP_HEIGHT-(PAD_HEIGHT/2)) {
@@ -149,25 +155,32 @@ void update_paddles(game_struct *game) {
 * adjusts the velocity accordingly
 */
 void check_collisions(game_struct *game) {
-	//pad A
+	//pad A from the front
 	if ((game->ballPos[0]-BALL_RAD) <= (PAD_OFFSET+PAD_WIDTH) &&
 		 game->ballPos[1] > (game->Apos-(PAD_HEIGHT/2)) &&
-		 game->ballPos[1] < (game->Apos+(PAD_HEIGHT/2))) {
+		 game->ballPos[1] < (game->Apos+(PAD_HEIGHT/2)) &&
+		 game->ballVel[0] < 0 && 
+		 (game->ballPos[0]-BALL_RAD) > GOAL_TOLERANCE) {
 		 
 		game->ballVel[0] *= -1;
 		game->ballVel[1] += game->dA;
 		 
-	//pad B
+	//pad B from the font
 	} else if ((game->ballPos[0]+BALL_RAD) >= (DISP_WIDTH-(PAD_OFFSET+PAD_WIDTH)) &&
 		 		  game->ballPos[1] > (game->Bpos-(PAD_HEIGHT/2)) &&
-		 		  game->ballPos[1] < (game->Bpos+(PAD_HEIGHT/2))) {
+		 		  game->ballPos[1] < (game->Bpos+(PAD_HEIGHT/2)) &&
+		 		  game->ballVel[0] > 0 &&
+		 		  (game->ballPos[0]+BALL_RAD) < (DISP_WIDTH-GOAL_TOLERANCE)) {
 		game->ballVel[0] *= -1;
 		game->ballVel[1] += game->dB;
 		 
-	// bottom side
-	} else if ((game->ballPos[1]-BALL_RAD) <= 0 ||
-				  (game->ballPos[1]+BALL_RAD) >= DISP_HEIGHT) {
+	// bottom and top sides
+	} else if (((game->ballPos[1]-BALL_RAD) <= 0 &&
+					game->ballVel[1] < 0) ||
+					((game->ballPos[1]+BALL_RAD) >= DISP_HEIGHT &&
+					game->ballVel[1] > 0)) {
 		game->ballVel[1] *= -1;
+		
 	}
 }
 

@@ -6,9 +6,10 @@ CFLAGS =-g -std=gnu99 -O1 -Wall
 CXXFLAGS = -g -std=gnu++11 -O1 -Wall
 LDFLAGS = -lrt -pthread
 
-SOURCES = PONG.c game.c gameGraphics.c pause.c knobs.c
+SOURCES = PONG.c game.c gameGraphics.c pause.c knobs.c main_menu.c
+SOURCES += text_plot_lib.c non_block.c
 SOURCES +=  mzapo_phys.c mzapo_parlcd.c
-#SOURCES += font_prop14x16.c font_rom8x16.c
+SOURCES += font_prop14x16.c font_rom8x16.c
 TARGET_EXE = output.o
 TARGET_IP ?= 10.0.0.46
 ifeq ($(TARGET_IP)$(filter run,$(MAKECMDGOALS)),run)

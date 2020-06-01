@@ -7,6 +7,7 @@
 #define BALL_INIT_Y 160
 #define PAD_INIT_POS 160
 #define INIT_X_VEL 9
+#define GOAL_TOLERANCE 7
 
 #define MAX_PTS 8
 
