@@ -16,6 +16,7 @@
 #include "non_block.h"
 #include "main_menu.h"
 #include "colors.h"
+#include "PONG.h"
 
 
 char * winner;
@@ -34,13 +35,6 @@ bool init_perifs_win(void){
   	if (parled_mem_base == NULL) {
     	return false;
   	}
-
-  	if (!knobs_init()){
-  		return false;
-  	}
-
-	parlcd_hx8357_init(parlcd_mem_base);
- 	parlcd_write_cmd(parlcd_mem_base, 0x2c);
  	return true;
 }
 
@@ -84,18 +78,15 @@ void blink_win_leds(void){
 }
 
 
-void end_game_loop(game_struct * game){
+void end_game_loop(char * won){
 	// setup graphics
 	if (!init_perifs_win()){
 		fprintf(stderr, "ERROR: Could not initialize memory for periferies!\n");
 		exit(-1);
 	}
-	if (game->Apts > game->Bpts){
-		winner = game->Aname;
-	}
-	else{
-		winner = game->Bname;
-	}
+	
+	winner = won;
+	
 	win_graphics();
 
 	// wait for signal to leave menu
