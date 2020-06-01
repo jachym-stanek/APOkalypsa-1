@@ -19,6 +19,7 @@
 #include "game.h"
 #include "PONG.h"
 #include "gameGraphics.h"
+#include "menu_utils.h"
 #include "non_block.h"
 
 
@@ -51,18 +52,6 @@ bool init_perifs(void){
   	strcpy(MENU_DATA.Player2_name, "Player 2");
   	
  	return true;
-}
-
-
-void display_data(uint16_t * data){
- 	// display text
- 	for (int i = 0; i < 320 ; i++) {
-	    for (int j = 0; j < 480 ; j++) {
-    	 	parlcd_write_data(parlcd_mem_base, data[i*480 + j]);
-	    }
- 	}
-
- 	free(data);
 }
 
 
@@ -140,11 +129,9 @@ void info(void){
 void menu_text(uint16_t * data){
 	// player1 name
 	plot_text(60, 22, strlen(MENU_DATA.Player1_name), MENU_DATA.Player1_name, data, WHITE_COLOR_LCD, 3);
-	printf("Pl1 name: %s\n", MENU_DATA.Player1_name);
 
 	// player2 name
 	plot_text(60, 98, strlen(MENU_DATA.Player2_name), MENU_DATA.Player2_name, data, WHITE_COLOR_LCD, 3);
-	printf("Pl2 name: %s\n", MENU_DATA.Player2_name);
 
 	// start game
 	char * text = "Start Game";
@@ -213,7 +200,7 @@ void menu_graphics(void){
 
 
 	menu_text(data);
-	display_data(data);
+	display_data(data, parlcd_mem_base);
 	light_leds();
 }
 

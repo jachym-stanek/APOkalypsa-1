@@ -15,6 +15,10 @@ For description of other functions, please check out the following files:
 * [knobs.c](knobs.md)
 * [main_menu.c](main_menu.md)
 * [text_plot_lib.c](text_plot_lib.md)
+* [pause.c](pause.md)
+* [menu_utils.c](menu_utils.md)
+* [win_menu.c](win.md)
+* [non_block.c](non_block.md)
 
 # General information
 
