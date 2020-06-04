@@ -10,19 +10,19 @@
 
 **BALL_RAD** - the radius of the ball
 
-### int dispSetup()
+### int disp_etup()
 
 Sets up the memory addresses for printing data to the LCD sreen.
 
-### void cleanSlate()
+### void clean_slate()
 
 Turns the LCD sreen black and turns off all LEDs
 
-## void dispGame(int Apts, int Bpts, int Apad, int Bpad, int ball[])
+## void disp_game(int Apts, int Bpts, int Apad, int Bpad, int ball[])
 
 Displays the position of ball and paddles on the LCD screen and the score of each player on the LED strip
 
-## void prepImage(uint16_t *buffer, int Apad, int Bpad, int ball[])
+## void prep_image(uint16_t *buffer, int Apad, int Bpad, int ball[])
 
 Writes an image of the game state to the `*buffer`.
 
@@ -30,15 +30,15 @@ Writes an image of the game state to the `*buffer`.
 
 Displays whatever is in the `*buffer` to the LCD sreen.
 
-## int isPaddle(int Apad, int Bpad, int row, int col)
+## int is_paddle(int Apad, int Bpad, int row, int col)
 
 If pixel in row - `row` and column - `col` is part of an image of a paddle returns 1, othervise returns 0
 
-## int isBall(int ball[], int row, int col);
+## int is_ball(int ball[], int row, int col);
 
 If pixel in row - `row` and column - `col` is part of the image of the ball returns 1, othervise returns 0
 
-## void showScore(int Apts, int Bpts)
+## void show_score(int Apts, int Bpts)
 
 Lights up `Apts` LEDs on the left side and `Bpts` LEDs on the right side of the LED strip.
 
@@ -60,4 +60,4 @@ Both RGB LEDs blink red, green and blue
 
 ## void countdown()
 
-Flashes the RGB LEDs white as start countdown
+Flashes the RGB LEDs white as a start countdown.
