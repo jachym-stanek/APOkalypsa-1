@@ -173,21 +173,21 @@ void pause_loop(void){
 
 
 		// knob turn left = go up in menu
-		else if (get_paddle_pos('a') < PAUSE_DATA.last_knob_pos - 15){
+		else if (get_paddle_pos('c') < PAUSE_DATA.last_knob_pos - 15){
 			if (PAUSE_DATA.tab != '1'){
 				PAUSE_DATA.tab = '1';
 				pause_graphics();			
 			}
-			PAUSE_DATA.last_knob_pos = get_paddle_pos('a');
+			PAUSE_DATA.last_knob_pos = get_paddle_pos('c');
 		}
 
 		// knob turn right = go down in menu
-		else if (get_paddle_pos('a') > PAUSE_DATA.last_knob_pos + 15){
+		else if (get_paddle_pos('c') > PAUSE_DATA.last_knob_pos + 15){
 			if (PAUSE_DATA.tab != '2'){
 				PAUSE_DATA.tab = '2';
 				pause_graphics();
 			}
-			PAUSE_DATA.last_knob_pos = get_paddle_pos('a');
+			PAUSE_DATA.last_knob_pos = get_paddle_pos('c');
 		}
 
 		else if (get_pause()){
