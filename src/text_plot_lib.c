@@ -2,17 +2,14 @@
 
 #define _POSIX_C_SOURCE 200112L
 
-#include "text_plot_lib.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
 
+#include "text_plot_lib.h"
 #include "font_types.h"
-#include "main_menu.h"
-#include "colors.h"
 
 
 int char_width(font_descriptor_t* fdes, int ch){
@@ -37,22 +34,18 @@ void plot_char(int x, int y, font_descriptor_t* fdes, char ch, uint16_t *data, u
 			uint16_t bit_num = fdes->bits[(ch-0x20)*16 + i]; 	// bit map off set - char + row
 			// if jth bit in bitnum is 1
 			if ( (bit_num >> (fdes->maxwidth + 1 - j)) & 1 ){
+				// scale pixels by text size
 				for (int pix_y = 0; pix_y < size; ++pix_y){
 					for (int pix_x = 0; pix_x < size; ++pix_x){
 						int x_coord = x+j*size+pix_x;
 						int y_coord = y+i*size+pix_y;
 						if (x_coord>=0 && x_coord<480 && y_coord>=0 && y_coord<320){
 							data[x_coord + 480*y_coord] = color;
-							//printf("X");
 						}
 					}
 				}
 			}
-			else{
-					//printf("-");
-			}
 		}
-		//printf("\n");
 	}
 }
 
@@ -62,10 +55,12 @@ void plot_text(int x, int y, int num_chars, char text[num_chars], uint16_t *data
 	int line_start = x;
 
 	for (int i = 0; i < num_chars; ++i){
+		// new line
 		if (text[i] == '\n'){
 			x = line_start;
 			y += 16*size;
 		}
+		// draw char
 		else{
 			plot_char(x, y, fdes, text[i], data, color, size);
 			x += char_width(fdes, text[i])*size;
