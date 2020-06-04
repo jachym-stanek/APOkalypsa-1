@@ -10,7 +10,7 @@ SOURCES = PONG.c game.c gameGraphics.c pause.c knobs.c main_menu.c
 SOURCES += text_plot_lib.c non_block.c win_menu.c non_block.c menu_utils.c
 SOURCES +=  mzapo_phys.c mzapo_parlcd.c
 SOURCES += font_prop14x16.c font_rom8x16.c
-TARGET_EXE = output.o
+TARGET_EXE = ../PONG.o
 TARGET_IP ?= 10.0.0.46
 ifeq ($(TARGET_IP)$(filter run,$(MAKECMDGOALS)),run)
 $(warning The target IP address is not set)

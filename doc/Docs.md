@@ -22,7 +22,7 @@ For description of other functions, please check out the following files:
 
 # General information
 
-The main game data is stored in the structure [gameStruct](game.md).
+The main game data is stored in the structure [game_struct](game.md).
 
 Player A has the paddle on the left side of the screen and is controlled with the leftmost knob. Player B has the paddle on the right side of the screen and is controlled with the rightmost knob.
 

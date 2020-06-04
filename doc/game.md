@@ -11,7 +11,7 @@
 
 **MAX_PTS 8** - when one of the players reaches this number, they win
 
-### structure gameStruct
+### structure game_struct
 
 This structure contains the current state of the game.
 
@@ -28,15 +28,15 @@ This structure contains the current state of the game.
 * `int ballVel[2]` - two element vector of the velocity of the ball
 * `int rounds` - the number of played rounds
 
-## void PlayGame()
+## void play_game()
 
 The gameStruct with the initial game data is initialized by calling the setupData function. Then it starts the gameLoop function and hadles its return values - processes goals, pauses and ends the game.
 
-## int gameLoop(gameStruct *game)
+## int game_loop(gameStruct *game)
 
 This function handles the main operation of the game. Periodically calls the function update, until a goal is scored or the pause button is pushed. It returns a value from [status] (Docs.md) enum, based on the event that interrupted its operation.
 
-## void setupData(gameStruct *game)
+## void setup_data(gameStruct *game)
 
 This function sets the gameStruct to the initial state
 

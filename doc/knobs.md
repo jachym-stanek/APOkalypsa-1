@@ -6,7 +6,7 @@ Initializes the memory acces to read the knob values.
 
 Returns the knob position for the specified paddle.
 
-Paddles can be `'a'` or `'b'`, otherewise returns -1;
+Paddles can be `'a'` for the red knob, `'b'` for the blue knob or `'c'` for the green knob, otherewise returns -1;
 
 ## bool get_pause()
 
