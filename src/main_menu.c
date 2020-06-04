@@ -21,6 +21,7 @@
 #include "gameGraphics.h"
 #include "menu_utils.h"
 #include "non_block.h"
+#include "win_menu.h"
 
 
 // global menu data
@@ -87,9 +88,9 @@ void start_game(void){
 	
 		
 	if (status == A_WON) {
-		printf("Player A won!\n");
+		end_game_loop(MENU_DATA.Player1_name);
 	} else if (status == B_WON) {
-		printf("Player B won!\n");
+		end_game_loop(MENU_DATA.Player2_name);
 	} else {
 		printf("Unexpected outcome!\n");
 	}
@@ -262,6 +263,7 @@ void menu_startup(void){
 
 	// main menu loop
 	while (1){
+	printf("Middle paddle pos: %d\n", get_paddle_pos('c'));
 		// input from keyboard
 		if (0 != getc_timeout(0, 500, &in) ) {
 			printf("Got input: %c\n", in);
