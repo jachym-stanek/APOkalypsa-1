@@ -1,26 +1,28 @@
+### P_NAME_LEN
+
+Maximum allowed player name lenght
+Is set to 12 to allow names to fil on LCD
 
 ### structure menu_data_t
 
 Data holder for main menu instance
-Holds Player1 and Player2 custom names and currently selected menu tab
+Holds Player1 and Player2 custom names,
+currently selected menu tab, last knob position (for movement in menu with knob)
 
 ## bool init_perifs(void)
 
 Initilizes and maps board periferies into memory
-
-## void display_data(uint16_t * data)
-
-Displays data from uint16_t array onto LCD
-data must be of size 320x480
+Initializes default player names
+Returns false if something went wrong, true otherwise
 
 ## void change_player_name(char player)
 
-Changes name for selected playe
+Changes name for selected player
 Takes input from stdin
 
 ## void start_game(void)
 
-Ends menu instace and starts game loop
+Starts the game loop, after game loop finishes starts victory screen loop
 
 ## void exit_program(void)
 
@@ -32,7 +34,7 @@ Raises warning to stdout notifying user about unexpected stdin input
 
 ## void welcome(void)
 
-Creates menu startup message
+Creates menu startup message, initializes knob position
 
 ## void info(void)
 
@@ -52,5 +54,5 @@ Indicates selected tab by different color on LEDs
 
 ## void menu_startup(void)
 
-Main GUI loop
+Main GUI loop, handles user inputs and responds to them
 

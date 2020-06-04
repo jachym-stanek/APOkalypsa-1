@@ -1,7 +1,7 @@
 ### pause_data_t;
 
-Data holder for main menu instance
-Holds Player1 and Player2 custom names and currently selected menu tab
+Data holder for pause menu instance
+Holds currently selected menu tab, end signifier, last knob position
 
 
 ## bool init_perifs_pause(void)
