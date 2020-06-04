@@ -114,7 +114,7 @@ void wrong_key(void){
 
 void welcome(void){
 	info();
-	MENU_DATA.last_knob_pos = get_paddle_pos('a');
+	MENU_DATA.last_knob_pos = get_paddle_pos('c');
 }
 
 
@@ -263,10 +263,8 @@ void menu_startup(void){
 
 	// main menu loop
 	while (1){
-	printf("Middle paddle pos: %d\n", get_paddle_pos('c'));
 		// input from keyboard
 		if (0 != getc_timeout(0, 500, &in) ) {
-			printf("Got input: %c\n", in);
 			switch (in) {
 				case '1':
 				case '2':
@@ -286,20 +284,20 @@ void menu_startup(void){
 					break;
 			}
 		// knob turn left = go up in menu
-		} else if (get_paddle_pos('a') < MENU_DATA.last_knob_pos - 15){
+		} else if (get_paddle_pos('c') < MENU_DATA.last_knob_pos - 15){
 			if (MENU_DATA.tab != '1'){
 				MENU_DATA.tab -= 1;
 				menu_graphics();
-				MENU_DATA.last_knob_pos = get_paddle_pos('a');
+				MENU_DATA.last_knob_pos = get_paddle_pos('c');
 			}
 		}
 
 		// knob turn right = go down in menu
-		else if (get_paddle_pos('a') > MENU_DATA.last_knob_pos + 15){
+		else if (get_paddle_pos('c') > MENU_DATA.last_knob_pos + 15){
 			if (MENU_DATA.tab != '4'){
 				MENU_DATA.tab += 1;
 				menu_graphics();
-				MENU_DATA.last_knob_pos = get_paddle_pos('a');
+				MENU_DATA.last_knob_pos = get_paddle_pos('c');
 			}
 		}
 
