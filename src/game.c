@@ -12,7 +12,7 @@
 #include "pause.h"
 
 //starts the game and handles the end
-int play_game() {
+int play_game(char * P1_name, char * P2_name) {
 	game_struct game;
 	setup_data(&game);
 	
@@ -23,7 +23,7 @@ int play_game() {
 		switch (check) {
 			case A_SCORED:
 				game.Apts++;
-				printf("Player A scored!\n");
+				printf("%s scored!\n", P1_name);
 				reset(&game);
 				show_goal();
 				
@@ -35,7 +35,7 @@ int play_game() {
 				
 			case B_SCORED:
 				game.Bpts++;
-				printf("Player B scored!\n");
+				printf("%s scored!\n", P2_name);
 				reset(&game);
 				show_goal();
 				

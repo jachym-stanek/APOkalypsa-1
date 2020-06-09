@@ -30,7 +30,7 @@ typedef struct {
 } game_struct;
 
 //starts the game and handles the end
-int play_game();
+int play_game(char * P1_name, char * P2_name);
 
 //main function for playing the game
 int game_loop(game_struct *game);

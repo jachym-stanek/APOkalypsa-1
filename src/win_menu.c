@@ -55,23 +55,23 @@ void win_graphics(void){
 }
 
 
-void blink_win_leds(void){
+void blink_win_leds(int mode){
 	unsigned int color;
-	struct timespec delay = {.tv_sec = 0, .tv_nsec = 300*1000*1000};
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 200*1000*1000};
 
-	color = ORANGE_COLOR;
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB1_o) = color;
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB2_o) = color;
-	color = BLUE_COLOR;
-	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB1_o) = color;
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB2_o) = color;
-	color = GREEN_COLOR;
-	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB1_o) = color;
-	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB2_o) = color;
-	color = RED_COLOR;
-	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+	if (mode == 0){
+		color = ORANGE_COLOR;	
+	}
+	if (mode == 1){
+		color = BLUE_COLOR;
+	}
+	if (mode == 2){
+		color = GREEN_COLOR;
+	}
+	if (mode == 3){
+		color = RED_COLOR;
+	}
+
 	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB1_o) = color;
 	*(volatile uint32_t*)(parled_mem_base + SPILED_REG_LED_RGB2_o) = color;
 	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
@@ -79,6 +79,13 @@ void blink_win_leds(void){
 
 
 void end_game_loop(char * won){
+	// wait for knob button to be released
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 200*1000*1000};
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+
+	printf("%s won\n", won);
+	int mode = 0;
+
 	// setup graphics
 	if (!init_perifs_win()){
 		fprintf(stderr, "ERROR: Could not initialize memory for periferies!\n");
@@ -97,11 +104,7 @@ void end_game_loop(char * won){
 	while (true){
 		t = getc_timeout(STDIN_FILENO, READ_TIMEOUT, &in);
 
-		if (get_pause()){
-			menu_startup();
-		}
-
-		else if (t == 1){
+		if (t == 1){
 			if (in == 'q'){
 				menu_startup();
 			}
@@ -113,8 +116,13 @@ void end_game_loop(char * won){
 			}
 		}
 
+		else if (get_pause()){
+			menu_startup();
+		}
+
 		else{
-			blink_win_leds();
+			blink_win_leds(mode);
+			mode = (mode + 1) % 4;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "knobs.h"
+#include <time.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -8,6 +8,7 @@
 #include "mzapo_phys.h"
 #include "mzapo_regs.h"
 
+#include "knobs.h"
 #include "pause.h"
 #include "text_plot_lib.h"
 #include "colors.h"
@@ -145,6 +146,10 @@ void tab_pressed_pause(void){
 
 
 void pause_loop(void){
+	// wait for knob button to be released
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 300*1000*1000};
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+
 	int t;
 	unsigned char in;
 
@@ -173,7 +178,7 @@ void pause_loop(void){
 
 
 		// knob turn left = go up in menu
-		else if (get_paddle_pos('c') < PAUSE_DATA.last_knob_pos - 15){
+		else if (get_paddle_pos('c') < PAUSE_DATA.last_knob_pos - 3){
 			if (PAUSE_DATA.tab != '1'){
 				PAUSE_DATA.tab = '1';
 				pause_graphics();			
@@ -182,7 +187,7 @@ void pause_loop(void){
 		}
 
 		// knob turn right = go down in menu
-		else if (get_paddle_pos('c') > PAUSE_DATA.last_knob_pos + 15){
+		else if (get_paddle_pos('c') > PAUSE_DATA.last_knob_pos + 3){
 			if (PAUSE_DATA.tab != '2'){
 				PAUSE_DATA.tab = '2';
 				pause_graphics();

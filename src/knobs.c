@@ -20,6 +20,7 @@ short get_paddle_pos(char paddle) {
 	uint32_t knobs = *(volatile uint32_t*)(mem_base + SPILED_REG_KNOBS_8BIT_o);
 	
 	short ret = 0;
+	
 	if (paddle == 'a') {
 		ret = knobs>>16;
 	} else if (paddle == 'b') {
@@ -27,7 +28,6 @@ short get_paddle_pos(char paddle) {
 	} else if (paddle == 'c'){
 		ret = (knobs<<8);
 		ret = ret>>8;
-		printf("%x\n", ret);
 	} else {
 		return -1;
 	}

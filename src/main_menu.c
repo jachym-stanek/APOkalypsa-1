@@ -62,7 +62,11 @@ void change_player_name(char player){
 	// 12 is max size that can be displayed
 	static char new_name[P_NAME_LEN+1];
 
-	scanf("%12s", new_name);
+	int r = scanf("%12s", new_name);
+	if (r < 0){
+		fprintf(stderr, "ERROR: Problem with reading player name!\n");
+		return;
+	}
 
 	if (player == '1'){
 		strcpy(MENU_DATA.Player1_name, new_name);
@@ -84,9 +88,8 @@ void change_player_name(char player){
 
 
 void start_game(void){
-	int status = play_game();
+	int status = play_game(MENU_DATA.Player1_name, MENU_DATA.Player2_name);
 	
-		
 	if (status == A_WON) {
 		end_game_loop(MENU_DATA.Player1_name);
 	} else if (status == B_WON) {
@@ -203,6 +206,9 @@ void menu_graphics(void){
 	menu_text(data);
 	display_data(data, parlcd_mem_base);
 	light_leds();
+	// sleep for more natural LCD resfresh
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 30*1000*1000};
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
 }
 
 
@@ -210,16 +216,16 @@ void light_leds(void){
 
 	unsigned int color;
 	if (MENU_DATA.tab == '1'){
-		color = RED_COLOR;
+		color = BLUE_COLOR;
 	}
 	else if (MENU_DATA.tab == '2'){
 		color = ORANGE_COLOR;
 	}
 	else if (MENU_DATA.tab == '3'){
-		color = BLUE_COLOR;
+		color = GREEN_COLOR;
 	}
 	else if (MENU_DATA.tab == '4'){
-		color = BLACK_COLOR;
+		color = RED_COLOR;
 	}
 	else{
 		color = WHITE_COLOR;
@@ -249,6 +255,10 @@ void tab_pressed(void){
 
 
 void menu_startup(void){
+	// wait for button to be released (if user used button to leave pause or win)
+	struct timespec delay = {.tv_sec = 0, .tv_nsec = 300*1000*1000};
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &delay, NULL);
+
 	// initialize memory
 	if (!init_perifs()){
 		fprintf(stderr, "ERROR: Could not initialize memory for preriferals!\n");
@@ -260,11 +270,14 @@ void menu_startup(void){
 	// initialize GUI
 	menu_graphics();
 	unsigned char in;
+	int t;
 
 	// main menu loop
 	while (1){
 		// input from keyboard
-		if (0 != getc_timeout(0, 500, &in) ) {
+		t = getc_timeout(STDIN_FILENO, READ_TIMEOUT, &in);
+
+		if (t == 1) {
 			switch (in) {
 				case '1':
 				case '2':
@@ -284,21 +297,21 @@ void menu_startup(void){
 					break;
 			}
 		// knob turn left = go up in menu
-		} else if (get_paddle_pos('c') < MENU_DATA.last_knob_pos - 15){
+		} else if (get_paddle_pos('c') < MENU_DATA.last_knob_pos - 3){
 			if (MENU_DATA.tab != '1'){
 				MENU_DATA.tab -= 1;
 				menu_graphics();
-				MENU_DATA.last_knob_pos = get_paddle_pos('c');
 			}
+			MENU_DATA.last_knob_pos = get_paddle_pos('c');
 		}
 
 		// knob turn right = go down in menu
-		else if (get_paddle_pos('c') > MENU_DATA.last_knob_pos + 15){
+		else if (get_paddle_pos('c') > MENU_DATA.last_knob_pos + 3){
 			if (MENU_DATA.tab != '4'){
 				MENU_DATA.tab += 1;
 				menu_graphics();
-				MENU_DATA.last_knob_pos = get_paddle_pos('c');
 			}
+			MENU_DATA.last_knob_pos = get_paddle_pos('c');
 		}
 
 		else if (get_pause()){
@@ -310,4 +323,3 @@ void menu_startup(void){
 		}
 	}
 }
-
